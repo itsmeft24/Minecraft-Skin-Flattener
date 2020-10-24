@@ -10,4 +10,4 @@ It also lowers the brightness, so that the skins don't blast you with pure light
 I will not be updating this to convert 64x32 skins, many other tools exist. Pretty much, what you see is what you get with this script. I know this is some next-level spaghetti code, so feel free to make a more optimized version of this program.
 
 # Dependencies
-You need wget, Pillow, and OS to run this.
+You need wget and Pillow to run this.
