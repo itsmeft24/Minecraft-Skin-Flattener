@@ -1,5 +1,6 @@
 # Minecraft-Skin-Flattener
 Flattens 64x64 Minecraft Skins for use in Super Smash Bros. Ultimate
+This is now deprecated due to jam1garner's breakthrough in the second layer mod. This pretty much removes the need to flatten any Minecraft Skin if you have this mod installed.
 
 # Features
 Uses Minotaur to download a skin based off of their username, and then flattens the skin.
