@@ -1,5 +1,6 @@
-# This is now deprecated due to jam1garner's breakthrough in the second layer mod.
+# This is now deprecated due to jam1garner's smash-minecraft-skins.
 It pretty much removes the need to flatten any Minecraft Skin if you have the mod installed.
+Actually, you don't even need to make a mod yourself! His repo does it all, and is really user-friendly.
 
 # Minecraft-Skin-Flattener
 Flattens 64x64 Minecraft Skins for use in Super Smash Bros. Ultimate.
