@@ -1,18 +1,12 @@
-import wget
-from PIL import Image
-from PIL import ImageDraw, ImageEnhance
-import os
+import json, base64, requests
+from io import BytesIO
+from PIL import Image, ImageDraw
 
-CURR_DIR = os.getcwd()
 skin = input("Enter Username:")
-url = "https://minotar.net/skin/"+str(skin)+".png"
-wget.download(url, './lib.png')
-os.mkdir("tmp")
-os.system("move lib.png tmp")
+img = Image.open(BytesIO(requests.get(json.loads(base64.b64decode(requests.get("https://sessionserver.mojang.com/session/minecraft/profile/"+requests.get("https://api.mojang.com/users/profiles/minecraft/"+skin).json()["id"]).json()["properties"][0]["value"]))["textures"]["SKIN"]["url"]).content)).convert("RGBA")
 layer = input("\nIs this skin Single-Layer or Multi-Layer? [y/n]")
 if layer == str("y") or layer == str("Y"):
     print("Converting...")
-    img = Image.open(CURR_DIR+'/tmp/lib.png').convert("RGBA")
     LowL = img.crop((0, 48, 16, 64))
     LowR = img.crop((48, 48, 64, 64))
     CenterR = img.crop((0, 32, 64, 48))
@@ -23,29 +17,48 @@ if layer == str("y") or layer == str("Y"):
     export.paste(LowR, (32,48), LowR)
     export.paste(CenterR, (0,16), CenterR)
     export.paste(HeadPat, (0,0), HeadPat)
-    export = ImageEnhance.Brightness(export).enhance(0.7)
-    export.save("OUT.png")
-    os.system("RD /s /q tmp")
+    for x in range(64):
+        for y in range(64):
+            R = pow(export.getpixel((x,y))[0]/255,(0.83))*191
+            G = pow(export.getpixel((x,y))[1]/255,(0.83))*191
+            B = pow(export.getpixel((x,y))[2]/255,(0.83))*191
+            A = export.getpixel((x,y))[3]
+            if R >= 191 :
+                R = 191
+            if G >= 191 :
+                G = 191
+            if B >= 191 :
+                B = 191
+            export.putpixel((x,y), (int(R), int(G), int(B), int(A)))
     print("Removing Transparency...")
-    img = Image.open("out.png").convert("RGBA")
-    background = Image.new('RGBA', img.size, (106,106,106))
-    alpha_composite = Image.alpha_composite(background, img)
-    alpha_composite.save('out.png')
+    background = Image.new('RGBA', (64, 64), (106,106,106,255))
+    export = Image.alpha_composite(background, export)
     print("Transparency Removed!")
     print("Cleaning up Images...")
-    crack = Image.open("out.png").convert("RGBA")
-    crack1 = ImageDraw.Draw(crack)
-    crack1.rectangle([(0, 48), (16, 64)], fill=(106,106,106), outline=None, width=0)
-    crack1.rectangle([(48, 48), (64, 64)], fill=(106,106,106), outline=None, width=0)
-    crack1.rectangle([(0, 32), (64, 48)], fill=(106,106,106), outline=None, width=0)
-    crack1.rectangle([(32, 0), (64, 16)], fill=(106,106,106), outline=None, width=0)
-    crack.save("out.png")
+    gray = ImageDraw.Draw(export)
+    gray.rectangle([(0, 48), (15, 64)], fill=(106,106,106), outline=None, width=0)
+    gray.rectangle([(48, 48), (63, 64)], fill=(106,106,106), outline=None, width=0)
+    gray.rectangle([(0, 32), (64, 47)], fill=(106,106,106), outline=None, width=0)
+    gray.rectangle([(32, 0), (64, 15)], fill=(106,106,106), outline=None, width=0)
+    export = export.convert("RGB")
+    export.save('out.png')
 else:
     print("Removing Transparency...")
-    img = Image.open(CURR_DIR+'/tmp/lib.png').convert("RGBA")
-    img = ImageEnhance.Brightness(img).enhance(0.7)
+    for x in range(64):
+        for y in range(64):
+            R = pow(img.getpixel((x,y))[0]/255,(0.83))*191
+            G = pow(img.getpixel((x,y))[1]/255,(0.83))*191
+            B = pow(img.getpixel((x,y))[2]/255,(0.83))*191
+            A = img.getpixel((x,y))[3]
+            if R >= 191 :
+                R = 191
+            if G >= 191 :
+                G = 191
+            if B >= 191 :
+                B = 191
+            img.putpixel((x,y), (int(R), int(G), int(B), int(A)))
     background = Image.new('RGBA', img.size, (106,106,106))
-    alpha_composite = Image.alpha_composite(background, img)
-    alpha_composite.save('out.png')
-    os.system("RD /s /q tmp")
+    img = Image.alpha_composite(background, img)
+    img = img.convert("RGB")
+    img.save('out.png')
     print("Transparency Removed!")
